@@ -109,6 +109,7 @@ public class Hello implements EntryPoint {
         dialogVPanel.add(serverResponseLabel);
         dialogVPanel.setHorizontalAlignment(VerticalPanel.ALIGN_RIGHT);
         dialogVPanel.add(closeButton);
+        dialogVPanel.add(countCallLabel);//SX
         dialogBox.setWidget(dialogVPanel);
         
         // Add a handler to close the DialogBox
@@ -120,6 +121,30 @@ public class Hello implements EntryPoint {
             }
         });
         
+        countCallButton.addClickHandler(new ClickHandler() {//SX
+            public void onClick(ClickEvent event) {
+            	countCallLabel.setText("Number of Successful Calls: "+ countCallService.getNumber() );
+            }
+        });
+        
+        
+     // Create a handler for clearPersonButton
+        class MyHandler2 implements ClickHandler {//SX
+            /**
+             * Fired when the user clicks on the sendButton.
+             */
+            public void onClick(ClickEvent event) {
+                clean();
+            }
+
+			private void clean() {
+				// TODO Auto-generated method stub
+				personName.setText(null);
+				personId.setText(null);
+			}
+            
+            
+        }
 
         // Create a handler for the sendButton and nameField
         class MyHandler implements ClickHandler, KeyUpHandler {
@@ -147,7 +172,7 @@ public class Hello implements EntryPoint {
                 errorLabel.setText("");
                 String textToServer = nameField.getText();
                 if (!FieldVerifier.isValidName(textToServer)) {
-                    errorLabel.setText("Please enter more than 4 caracters");
+                    errorLabel.setText("Please enter more than 4 caracters for name");//SX 05/10/2015
                     return;
                 }
 
@@ -171,6 +196,7 @@ public class Hello implements EntryPoint {
                                 dialogBox.setText("Remote Procedure Call");
                                 serverResponseLabel.removeStyleName("serverResponseLabelError");
                                 serverResponseLabel.setHTML(result);
+                                countCallService.addCall();//SX
                                 dialogBox.center();
                                 closeButton.setFocus(true);
                             }
@@ -182,6 +208,7 @@ public class Hello implements EntryPoint {
         MyHandler handler = new MyHandler();
         sendButton.addClickHandler(handler);
         nameField.addKeyUpHandler(handler);
+        clearPersonButton.addClickHandler(handler);
 
         /* Layout for person information*/
         FlexTable layout = new FlexTable();
